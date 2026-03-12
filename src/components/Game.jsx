@@ -9,6 +9,7 @@ import GuessGrid from './GuessGrid';
 import Keyboard from './Keyboard';
 import RiddleCharacter from './RiddleCharacter';
 import ResultModal from './ResultModal';
+import TutorialModal from './TutorialModal';
 
 const MAX_GUESSES = 5;
 const CONSONANTS = new Set('BCDFGHJKLMNPQRSTVWXYZ'.split(''));
@@ -33,13 +34,17 @@ function computeKeyStates(guesses, feedbacks) {
   return states;
 }
 
+function localDateStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 function loadSavedGame() {
   try {
     const raw = localStorage.getItem('rtb_gameState');
     if (!raw) return null;
     const saved = JSON.parse(raw);
-    const today = new Date().toISOString().slice(0, 10);
-    if (saved.date !== today) return null;
+    if (saved.date !== localDateStr()) return null;
     return saved; // { date, guesses, feedbacks, gameStatus }
   } catch {
     return null;
@@ -48,9 +53,12 @@ function loadSavedGame() {
 
 function saveGame(guesses, feedbacks, gameStatus) {
   try {
-    const today = new Date().toISOString().slice(0, 10);
-    localStorage.setItem('rtb_gameState', JSON.stringify({ date: today, guesses, feedbacks, gameStatus }));
+    localStorage.setItem('rtb_gameState', JSON.stringify({ date: localDateStr(), guesses, feedbacks, gameStatus }));
   } catch { /* ignore */ }
+}
+
+function getInitialTutorial() {
+  try { return !localStorage.getItem('rtb_tutorialSeen'); } catch { return true; }
 }
 
 function getInitialTheme() {
@@ -73,6 +81,7 @@ export default function Game() {
   const [modalOpen, setModalOpen]       = useState(_initialSaved?.gameStatus === 'won' || _initialSaved?.gameStatus === 'lost');
   const [stats, setStats]               = useState(_initialSaved ? getStats() : null);
   const [theme, setTheme]               = useState(getInitialTheme);
+  const [tutorialOpen, setTutorialOpen] = useState(getInitialTutorial);
 
   const handleKeyRef = useRef(null);
 
@@ -183,6 +192,24 @@ export default function Game() {
           A E — I O U. The rest are mine.
         </p>
         <button
+          onClick={() => setTutorialOpen(true)}
+          aria-label="How to play"
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: '2rem',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '1.1rem',
+            color: 'var(--color-stripe)',
+            lineHeight: 1,
+            padding: '0.25rem',
+          }}
+        >
+          ?
+        </button>
+        <button
           onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
           aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           style={{
@@ -230,6 +257,15 @@ export default function Game() {
         <div style={{ marginTop: 'auto', width: '100%' }}>
           <Keyboard onKey={handleKey} keyStates={keyStates} />
         </div>
+      )}
+
+      {tutorialOpen && (
+        <TutorialModal
+          onClose={() => {
+            try { localStorage.setItem('rtb_tutorialSeen', '1'); } catch { /* ignore */ }
+            setTutorialOpen(false);
+          }}
+        />
       )}
 
       {modalOpen && (

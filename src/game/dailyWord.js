@@ -1,9 +1,9 @@
-// Use Date.UTC for both sides so timezone offsets can't produce a negative index.
-const EPOCH = Date.UTC(2026, 2, 12); // March 12, 2026, 00:00 UTC
+// Use local dates so the word resets at local midnight for each player.
+const EPOCH = new Date(2026, 2, 12); // March 12, 2026, local midnight
 
 export function getDailyWord(wordList) {
   const now = new Date();
-  const todayUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-  const dayIndex = Math.max(0, Math.floor((todayUTC - EPOCH) / 86400000));
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const dayIndex = Math.max(0, Math.floor((today - EPOCH) / 86400000));
   return wordList[dayIndex % wordList.length];
 }
