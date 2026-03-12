@@ -25,7 +25,7 @@
     # - font-src: self + Google Fonts files
     # - img-src: self + data URIs (canvas toBlob exports)
     # - connect-src: self + Umami (beacon pings)
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://cloud.umami.is; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://cloud.umami.is; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://cloud.umami.is; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://cloud.umami.is https://api-gateway.umami.dev; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
 
     # Prevent clickjacking
     X-Frame-Options = "DENY"
