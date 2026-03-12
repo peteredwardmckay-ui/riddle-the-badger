@@ -158,26 +158,44 @@ export default function ShareButton({ gameStatus, skeleton = [], guesses = [], f
     : `Riddle wins today.\nriddlethebadger.com`;
 
   async function handleShare() {
-    const canvas = await buildCanvas(skeleton, guesses, feedbacks, gameStatus);
-    const blob   = await new Promise(res => canvas.toBlob(res, 'image/png'));
-    const file   = new File([blob], 'riddle-the-badger.png', { type: 'image/png' });
+    // Try canvas + native share (mobile)
+    try {
+      const canvas = await buildCanvas(skeleton, guesses, feedbacks, gameStatus);
+      const blob   = await new Promise((res, rej) =>
+        canvas.toBlob(b => b ? res(b) : rej(new Error('toBlob failed')), 'image/png')
+      );
+      const file = new File([blob], 'riddle-the-badger.png', { type: 'image/png' });
 
-    // Mobile: native share sheet with image
-    if (navigator.canShare?.({ files: [file] })) {
-      try { await navigator.share({ files: [file], text: shareText }); return; } catch {}
-    }
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], text: shareText });
+        return;
+      }
+    } catch {}
 
     // Text-only share sheet (some mobile browsers)
-    if (navigator.share) {
-      try { await navigator.share({ text: shareText }); return; } catch {}
-    }
+    try {
+      if (navigator.share) {
+        await navigator.share({ text: shareText });
+        return;
+      }
+    } catch {}
 
-    // Desktop fallback: copy text
+    // Desktop fallback: copy text to clipboard
     try {
       await navigator.clipboard.writeText(shareText);
-      setLabel('Copied!');
-      setTimeout(() => setLabel('Share result'), 2000);
-    } catch {}
+    } catch {
+      // Last resort for browsers blocking clipboard API
+      const ta = document.createElement('textarea');
+      ta.value = shareText;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    setLabel('Copied!');
+    setTimeout(() => setLabel('Share result'), 2000);
   }
 
   return (
