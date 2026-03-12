@@ -1,0 +1,45 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# SPA fallback — all routes serve index.html
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Content Security Policy
+    # - default-src self: only same-origin by default
+    # - script-src: self + Umami analytics
+    # - style-src: self + Google Fonts CSS + inline (Vite injects inline styles)
+    # - font-src: self + Google Fonts files
+    # - img-src: self + data URIs (canvas toBlob exports)
+    # - connect-src: self + Umami (beacon pings)
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://cloud.umami.is; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://cloud.umami.is; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+
+    # Prevent clickjacking
+    X-Frame-Options = "DENY"
+
+    # Prevent MIME sniffing
+    X-Content-Type-Options = "nosniff"
+
+    # Referrer policy — don't leak URL to third parties
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # HTTPS only
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+# Long-lived cache for hashed assets (Vite fingerprints JS/CSS/images)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Never cache the service worker
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"

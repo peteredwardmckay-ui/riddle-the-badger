@@ -1,0 +1,75 @@
+:root {
+  --color-bg:         #FBF7EF;
+  --color-text:       #1A1A1A;
+  --color-stripe:     #2B2B2B;
+  --color-gold:       #C8900A;
+  --color-grey-light: #F2F2F2;
+  --color-grey-mid:   #DDDDDD;
+
+  /* Feedback colours */
+  --color-correct:    #3B6FCC;
+  --color-present:    #E07060;
+  --color-absent:     #6B2737;
+  --color-empty:      #FFFFFF;
+
+  /* Modal overlay */
+  --color-overlay: rgba(27, 27, 27, 0.6);
+
+  /* Given vowel tiles — warm amber so they read as "revealed, not guessed" */
+  --color-given-bg:     #FEF0C7;
+  --color-given-border: #C8900A;
+  --color-given-text:   #6B4A00;
+
+  /* Typography scale */
+  --font-size-sm:   0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg:   1.25rem;
+  --font-size-xl:   1.5rem;
+  --font-size-2xl:  2rem;
+
+  --font-family-display: 'Lora', Georgia, serif;
+  --font-family-base: system-ui, -apple-system, sans-serif;
+  --font-family-mono: ui-monospace, 'Courier New', monospace;
+}
+
+/* Dark mode via system preference (when user hasn't overridden manually) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-overlay: rgba(0, 0, 0, 0.7);
+    --color-bg:         #18140E;
+    --color-text:       #EDE5D0;
+    --color-stripe:     #C8BAA0;
+    --color-gold:       #D4A820;
+    --color-grey-light: #2A2520;
+    --color-grey-mid:   #48423C;
+
+    --color-correct:    #5090E8;
+    --color-present:    #E87868;
+    --color-absent:     #8B3348;
+    --color-empty:      #201C14;
+
+    --color-given-bg:     #2C2208;
+    --color-given-border: #C8900A;
+    --color-given-text:   #F0C040;
+  }
+}
+
+/* Dark mode via manual toggle */
+:root[data-theme="dark"] {
+    --color-overlay: rgba(0, 0, 0, 0.7);
+  --color-bg:         #18140E;
+  --color-text:       #EDE5D0;
+  --color-stripe:     #C8BAA0;
+  --color-gold:       #D4A820;
+  --color-grey-light: #2A2520;
+  --color-grey-mid:   #48423C;
+
+  --color-correct:    #5090E8;
+  --color-present:    #E87868;
+  --color-absent:     #8B3348;
+  --color-empty:      #201C14;
+
+  --color-given-bg:     #2C2208;
+  --color-given-border: #C8900A;
+  --color-given-text:   #F0C040;
+}

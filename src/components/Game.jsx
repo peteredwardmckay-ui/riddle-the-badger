@@ -1,0 +1,272 @@
+import { useState, useEffect, useRef } from 'react';
+import { getSkeleton } from '../game/skeleton';
+import { getFeedback } from '../game/feedback';
+import { getDailyWord } from '../game/dailyWord';
+import { saveResult, getStats } from '../game/streak';
+import wordList from '../game/wordList';
+import guessList from '../game/guessList';
+import GuessGrid from './GuessGrid';
+import Keyboard from './Keyboard';
+import RiddleCharacter from './RiddleCharacter';
+import ResultModal from './ResultModal';
+
+const MAX_GUESSES = 5;
+const CONSONANTS = new Set('BCDFGHJKLMNPQRSTVWXYZ'.split(''));
+
+// Computed once — same word for all players on a given day.
+const ANSWER = getDailyWord(wordList);
+const { skeleton: SKELETON, consonants: ANSWER_CONSONANTS, consonantPositions: CONSONANT_POSITIONS } = getSkeleton(ANSWER);
+const VALID_WORDS = new Set([...guessList, ...wordList]);
+
+function computeKeyStates(guesses, feedbacks) {
+  const priority = { correct: 3, present: 2, absent: 1 };
+  const states = {};
+  guesses.forEach((guess, gi) => {
+    [...guess].forEach((letter, li) => {
+      const fb = feedbacks[gi]?.[li];
+      if (!fb) return;
+      if (!states[letter] || priority[fb] > priority[states[letter]]) {
+        states[letter] = fb;
+      }
+    });
+  });
+  return states;
+}
+
+function loadSavedGame() {
+  try {
+    const raw = localStorage.getItem('rtb_gameState');
+    if (!raw) return null;
+    const saved = JSON.parse(raw);
+    const today = new Date().toISOString().slice(0, 10);
+    if (saved.date !== today) return null;
+    return saved; // { date, guesses, feedbacks, gameStatus }
+  } catch {
+    return null;
+  }
+}
+
+function saveGame(guesses, feedbacks, gameStatus) {
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    localStorage.setItem('rtb_gameState', JSON.stringify({ date: today, guesses, feedbacks, gameStatus }));
+  } catch { /* ignore */ }
+}
+
+function getInitialTheme() {
+  try {
+    const stored = localStorage.getItem('rtb_theme');
+    if (stored === 'dark' || stored === 'light') return stored;
+  } catch { /* ignore */ }
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+// Read saved game once at module load — before React renders.
+const _initialSaved = loadSavedGame();
+
+export default function Game() {
+  const [guesses, setGuesses]           = useState(_initialSaved?.guesses    ?? []);
+  const [feedbacks, setFeedbacks]       = useState(_initialSaved?.feedbacks  ?? []);
+  const [currentGuess, setCurrentGuess] = useState('');
+  const [gameStatus, setGameStatus]     = useState(_initialSaved?.gameStatus ?? 'playing');
+  const [error, setError]               = useState('');
+  const [modalOpen, setModalOpen]       = useState(_initialSaved?.gameStatus === 'won' || _initialSaved?.gameStatus === 'lost');
+  const [stats, setStats]               = useState(_initialSaved ? getStats() : null);
+  const [theme, setTheme]               = useState(getInitialTheme);
+
+  const handleKeyRef = useRef(null);
+
+  function handleKey(key) {
+    if (gameStatus !== 'playing') return;
+
+    if (key === 'BACKSPACE') {
+      setCurrentGuess(g => g.slice(0, -1));
+      setError('');
+      return;
+    }
+
+    if (key === 'ENTER') {
+      if (currentGuess.length < ANSWER_CONSONANTS.length) {
+        setError('Not enough consonants.');
+        return;
+      }
+
+      // Reconstruct the full word from skeleton + guessed consonants
+      const wordArr = [...SKELETON];
+      [...currentGuess].forEach((c, i) => {
+        wordArr[CONSONANT_POSITIONS[i]] = c;
+      });
+      const word = wordArr.join('');
+
+      if (!VALID_WORDS.has(word)) {
+        setError('Not a valid word.');
+        return;
+      }
+
+      const feedback = getFeedback(ANSWER_CONSONANTS, [...currentGuess]);
+      const newGuesses   = [...guesses, currentGuess];
+      const newFeedbacks = [...feedbacks, feedback];
+
+      setGuesses(newGuesses);
+      setFeedbacks(newFeedbacks);
+      setCurrentGuess('');
+      setError('');
+
+      if (feedback.every(f => f === 'correct')) {
+        setGameStatus('won');
+        setStats(saveResult({ won: true,  guesses: newGuesses.length }));
+        saveGame(newGuesses, newFeedbacks, 'won');
+        setModalOpen(true);
+      } else if (newGuesses.length >= MAX_GUESSES) {
+        setGameStatus('lost');
+        setStats(saveResult({ won: false, guesses: newGuesses.length }));
+        saveGame(newGuesses, newFeedbacks, 'lost');
+        setModalOpen(true);
+      }
+      return;
+    }
+
+    // Consonant input
+    if (currentGuess.length >= ANSWER_CONSONANTS.length) return;
+    setCurrentGuess(g => g + key);
+    setError('');
+  }
+
+  handleKeyRef.current = handleKey;
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    try { localStorage.setItem('rtb_theme', theme); } catch { /* ignore */ }
+  }, [theme]);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'Backspace')  handleKeyRef.current('BACKSPACE');
+      else if (e.key === 'Enter') handleKeyRef.current('ENTER');
+      else if (CONSONANTS.has(e.key.toUpperCase())) handleKeyRef.current(e.key.toUpperCase());
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  const gameOver    = gameStatus !== 'playing';
+  const keyStates   = computeKeyStates(guesses, feedbacks);
+  const riddleState = gameStatus === 'won' ? 'win' : gameStatus === 'lost' ? 'loss' : 'idle';
+
+  return (
+    <div
+      style={{
+        maxWidth: '375px',
+        margin: '0 auto',
+        padding: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '1rem',
+        minHeight: '100dvh',
+      }}
+    >
+      <header style={{ width: '100%', borderBottom: '2px solid var(--color-stripe)', paddingBottom: '0.75rem', position: 'relative' }}>
+        <h1
+          style={{
+            margin: 0,
+            fontSize: 'var(--font-size-xl)',
+            fontWeight: 700,
+            fontFamily: 'var(--font-family-display)',
+            letterSpacing: '0.02em',
+            color: 'var(--color-stripe)',
+          }}
+        >
+          Riddle the Badger
+        </h1>
+        <p style={{ margin: '0.25rem 0 0', fontSize: 'var(--font-size-sm)', fontFamily: 'var(--font-family-display)', fontStyle: 'italic', color: 'var(--color-gold)' }}>
+          A E — I O U. The rest are mine.
+        </p>
+        <button
+          onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '1.25rem',
+            color: 'var(--color-stripe)',
+            lineHeight: 1,
+            padding: '0.25rem',
+          }}
+        >
+          {theme === 'dark' ? '☀' : '☾'}
+        </button>
+      </header>
+
+      <RiddleCharacter state={riddleState} theme={theme} />
+
+      <GuessGrid
+        skeleton={SKELETON}
+        guesses={guesses}
+        feedbacks={feedbacks}
+        currentGuess={currentGuess}
+        maxGuesses={MAX_GUESSES}
+        gameOver={gameOver}
+      />
+
+      {!gameOver && (
+        <div
+          style={{
+            minHeight: '1.25rem',
+            fontSize: 'var(--font-size-sm)',
+            color: 'var(--color-absent)',
+            fontWeight: 600,
+          }}
+        >
+          {error}
+        </div>
+      )}
+
+      {!gameOver && (
+        <div style={{ marginTop: 'auto', width: '100%' }}>
+          <Keyboard onKey={handleKey} keyStates={keyStates} />
+        </div>
+      )}
+
+      {modalOpen && (
+        <ResultModal
+          gameStatus={gameStatus}
+          answer={ANSWER}
+          guesses={guesses}
+          feedbacks={feedbacks}
+          skeleton={SKELETON}
+          stats={stats}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
+
+      <footer
+        style={{
+          marginTop: 'auto',
+          paddingTop: '1rem',
+          paddingBottom: '0.5rem',
+          width: '100%',
+          textAlign: 'center',
+          fontSize: 'var(--font-size-sm)',
+          color: 'var(--color-stripe)',
+          fontFamily: 'var(--font-family-base)',
+        }}
+      >
+        © {new Date().getFullYear()} Peter McKay
+        {' · '}
+        <a
+          href="https://ko-fi.com/petermckay"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: 'var(--color-stripe)', textDecoration: 'underline' }}
+        >
+          Ko-fi
+        </a>
+      </footer>
+    </div>
+  );
+}
