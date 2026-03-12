@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import idleSrc from '../assets/riddle/Riddle-the-badger.png';
+
+const idleSrc = '/riddle/Riddle-the-badger.png';
 
 // Fixed palette — share graphic is always light mode so it looks good anywhere
 const C = {

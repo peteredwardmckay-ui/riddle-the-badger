@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Game from './components/Game';
-import burrowSrc from './assets/riddle/Riddle-the-badger-burrow.png';
+const burrowSrc = '/riddle/Riddle-the-badger-burrow.png';
 
 export default function App() {
   // 'showing' → full opacity, 'fading' → transitioning out, 'done' → unmounted

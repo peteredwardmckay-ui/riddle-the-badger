@@ -1,14 +1,22 @@
-const CACHE = 'rtb-v1';
+const CACHE = 'rtb-v2';
 
-// On install: cache the app shell
+const PRECACHE = [
+  '/',
+  '/manifest.json',
+  '/riddle/Riddle-the-badger.png',
+  '/riddle/Riddle-the-badger-burrow.png',
+  '/riddle/Riddle-the-badger-Win.png',
+  '/riddle/Riddle-the-badger-Loss.png',
+  '/riddle/Riddle-the-badger-darkmode.png',
+  '/riddle/Riddle-the-badger-burrow-darkmode.png',
+  '/riddle/Riddle-the-badger-Win-darkmode.png',
+  '/riddle/Riddle-the-badger-Loss-darkmode.png',
+];
+
+// On install: cache the app shell + all character images
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE).then(cache =>
-      cache.addAll([
-        '/',
-        '/manifest.json',
-      ])
-    )
+    caches.open(CACHE).then(cache => cache.addAll(PRECACHE))
   );
   self.skipWaiting();
 });
