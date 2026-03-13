@@ -12,9 +12,8 @@ function getInitialTheme() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
-const isSaturday    = new Date().getDay() === 6;
-const forceQuote    = new URLSearchParams(window.location.search).has('quote');
-const quoteAvailable = isSaturday || forceQuote;
+const isSaturday     = new Date().getDay() === 6;
+const quoteAvailable = isSaturday;
 
 export default function App() {
   const [phase, setPhase]       = useState('showing');

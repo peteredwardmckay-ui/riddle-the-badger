@@ -351,7 +351,7 @@ function CompletionModal({ guessCount, quoteData, onClose }) {
 // ─── main component ──────────────────────────────────────────────────────────
 
 export default function QuoteGame({ theme, toggleTheme, quoteAvailable, onToggleMode }) {
-  const isSaturday = new Date().getDay() === 6 || quoteAvailable; // quoteAvailable doubles as dev override
+  const isSaturday = new Date().getDay() === 6;
 
   const [found,      setFound]      = useState(_saved?.found      ?? new Set());
   const [absent,     setAbsent]     = useState(_saved?.absent     ?? new Set());
