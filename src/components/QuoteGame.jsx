@@ -47,7 +47,6 @@ function persist(weekIndex, found, absent, guessCount, complete) {
 const { quote: QUOTE_DATA, weekIndex: WEEK_INDEX } = getWeeklyQuote(quotes);
 const QUOTE_CONSONANTS = getQuoteConsonants(QUOTE_DATA.quote);
 const PAR              = QUOTE_CONSONANTS.size;
-const _saved           = loadSaved(WEEK_INDEX);
 
 // Valid words: full guess list + all words that appear in the quote itself
 const quoteWords  = new Set((QUOTE_DATA.quote.toLowerCase().match(/[a-z]+/g) ?? []).map(w => w.toUpperCase()));
@@ -354,13 +353,15 @@ function CompletionModal({ guessCount, quoteData, onClose }) {
 export default function QuoteGame({ theme, toggleTheme, quoteAvailable, onToggleMode }) {
   const isSaturday = new Date().getDay() === 6 || new URLSearchParams(window.location.search).has('testSaturday');
 
-  const [found,         setFound]         = useState(_saved?.found      ?? new Set());
-  const [absent,        setAbsent]        = useState(_saved?.absent     ?? new Set());
-  const [guessCount,    setGuessCount]    = useState(_saved?.guessCount ?? 0);
-  const [complete,      setComplete]      = useState(_saved?.complete   ?? false);
+  const [initialSaved] = useState(() => loadSaved(WEEK_INDEX));
+
+  const [found,         setFound]         = useState(() => initialSaved?.found      ?? new Set());
+  const [absent,        setAbsent]        = useState(() => initialSaved?.absent     ?? new Set());
+  const [guessCount,    setGuessCount]    = useState(() => initialSaved?.guessCount ?? 0);
+  const [complete,      setComplete]      = useState(() => initialSaved?.complete   ?? false);
   const [input,         setInput]         = useState('');
   const [error,         setError]         = useState('');
-  const [modalOpen,     setModalOpen]     = useState(_saved?.complete   ?? false);
+  const [modalOpen,     setModalOpen]     = useState(() => initialSaved?.complete   ?? false);
   const [tutorialOpen,  setTutorialOpen]  = useState(() => {
     try { return !localStorage.getItem('rtb_quoteTutorialSeen'); } catch { return true; }
   });
