@@ -418,7 +418,7 @@ export default function QuoteGame({ theme, toggleTheme, quoteAvailable, onToggle
       style={{
         maxWidth: '375px',
         margin: '0 auto',
-        padding: '1rem 1rem 100px',
+        padding: '1rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -453,18 +453,12 @@ export default function QuoteGame({ theme, toggleTheme, quoteAvailable, onToggle
 
       <Graveyard absent={absent} />
 
-      {/* Fixed bottom bar — input only */}
+      {/* Input — in normal flow so mobile keyboard doesn't obscure the quote */}
       <div
         style={{
-          position: 'fixed',
-          bottom: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
           width: '100%',
-          maxWidth: '375px',
-          background: 'var(--color-bg)',
           borderTop: '2px solid var(--color-stripe)',
-          padding: '0.75rem 1rem 1rem',
+          paddingTop: '0.75rem',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.6rem',
