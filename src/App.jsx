@@ -1,29 +1,51 @@
 import { useState, useEffect } from 'react';
 import Game from './components/Game';
+import QuoteGame from './components/QuoteGame';
+
 const burrowSrc = '/riddle/Riddle-the-badger-burrow.png';
 
-export default function App() {
-  // 'showing' → full opacity, 'fading' → transitioning out, 'done' → unmounted
-  const [phase, setPhase] = useState('showing');
+function getInitialTheme() {
+  try {
+    const stored = localStorage.getItem('rtb_theme');
+    if (stored === 'dark' || stored === 'light') return stored;
+  } catch {}
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
 
-  // Two conditions must both be true before fading: game mounted + 2s elapsed.
-  // Since game logic is synchronous, 'ready' flips immediately on mount.
-  const [ready, setReady]     = useState(false);
-  const [elapsed, setElapsed] = useState(false);
+const isSaturday    = new Date().getDay() === 6;
+const forceQuote    = new URLSearchParams(window.location.search).has('quote');
+const quoteAvailable = isSaturday || forceQuote;
+
+export default function App() {
+  const [phase, setPhase]       = useState('showing');
+  const [ready, setReady]       = useState(false);
+  const [elapsed, setElapsed]   = useState(false);
+  const [theme, setTheme]       = useState(getInitialTheme);
+  const [gameMode, setGameMode] = useState('daily');
 
   useEffect(() => { setReady(true); }, []);
   useEffect(() => {
     const t = setTimeout(() => setElapsed(true), 1000);
     return () => clearTimeout(t);
   }, []);
-
   useEffect(() => {
     if (ready && elapsed) setPhase('fading');
   }, [ready, elapsed]);
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    try { localStorage.setItem('rtb_theme', theme); } catch {}
+  }, [theme]);
+
+  function toggleTheme() { setTheme(t => t === 'dark' ? 'light' : 'dark'); }
+  function toggleMode()  { setGameMode(m => m === 'daily' ? 'quote' : 'daily'); }
+
   return (
     <>
-      <Game />
+      {gameMode === 'daily'
+        ? <Game   theme={theme} toggleTheme={toggleTheme} quoteAvailable={quoteAvailable} onToggleMode={toggleMode} />
+        : <QuoteGame theme={theme} toggleTheme={toggleTheme} quoteAvailable={quoteAvailable} onToggleMode={toggleMode} />
+      }
 
       {phase !== 'done' && (
         <div
@@ -42,11 +64,7 @@ export default function App() {
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
-            <img
-              src={burrowSrc}
-              alt=""
-              style={{ width: '180px', height: '180px', objectFit: 'contain' }}
-            />
+            <img src={burrowSrc} alt="" style={{ width: '180px', height: '180px', objectFit: 'contain' }} />
             <p style={{
               margin: 0,
               fontFamily: 'var(--font-family-display)',

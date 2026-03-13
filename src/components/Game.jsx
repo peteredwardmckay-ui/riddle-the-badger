@@ -12,7 +12,7 @@ import ResultModal from './ResultModal';
 import TutorialModal from './TutorialModal';
 
 const MAX_GUESSES = 5;
-const CONSONANTS = new Set('BCDFGHJKLMNPQRSTVWXYZ'.split(''));
+const CONSONANTS  = new Set('BCDFGHJKLMNPQRSTVWXYZ'.split(''));
 
 // Computed once — same word for all players on a given day.
 const ANSWER = getDailyWord(wordList);
@@ -45,7 +45,8 @@ function loadSavedGame() {
     if (!raw) return null;
     const saved = JSON.parse(raw);
     if (saved.date !== localDateStr()) return null;
-    return saved; // { date, guesses, feedbacks, gameStatus }
+    if (saved.answer !== ANSWER) return null; // word changed (e.g. after a shuffle)
+    return saved;
   } catch {
     return null;
   }
@@ -53,26 +54,18 @@ function loadSavedGame() {
 
 function saveGame(guesses, feedbacks, gameStatus) {
   try {
-    localStorage.setItem('rtb_gameState', JSON.stringify({ date: localDateStr(), guesses, feedbacks, gameStatus }));
-  } catch { /* ignore */ }
+    localStorage.setItem('rtb_gameState', JSON.stringify({ date: localDateStr(), answer: ANSWER, guesses, feedbacks, gameStatus }));
+  } catch {}
 }
 
 function getInitialTutorial() {
   try { return !localStorage.getItem('rtb_tutorialSeen'); } catch { return true; }
 }
 
-function getInitialTheme() {
-  try {
-    const stored = localStorage.getItem('rtb_theme');
-    if (stored === 'dark' || stored === 'light') return stored;
-  } catch { /* ignore */ }
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
 // Read saved game once at module load — before React renders.
 const _initialSaved = loadSavedGame();
 
-export default function Game() {
+export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode }) {
   const [guesses, setGuesses]           = useState(_initialSaved?.guesses    ?? []);
   const [feedbacks, setFeedbacks]       = useState(_initialSaved?.feedbacks  ?? []);
   const [currentGuess, setCurrentGuess] = useState('');
@@ -80,7 +73,6 @@ export default function Game() {
   const [error, setError]               = useState('');
   const [modalOpen, setModalOpen]       = useState(_initialSaved?.gameStatus === 'won' || _initialSaved?.gameStatus === 'lost');
   const [stats, setStats]               = useState(_initialSaved ? getStats() : null);
-  const [theme, setTheme]               = useState(getInitialTheme);
   const [tutorialOpen, setTutorialOpen] = useState(getInitialTutorial);
 
   const handleKeyRef = useRef(null);
@@ -112,7 +104,7 @@ export default function Game() {
         return;
       }
 
-      const feedback = getFeedback(ANSWER_CONSONANTS, [...currentGuess]);
+      const feedback     = getFeedback(ANSWER_CONSONANTS, [...currentGuess]);
       const newGuesses   = [...guesses, currentGuess];
       const newFeedbacks = [...feedbacks, feedback];
 
@@ -144,11 +136,6 @@ export default function Game() {
   handleKeyRef.current = handleKey;
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    try { localStorage.setItem('rtb_theme', theme); } catch { /* ignore */ }
-  }, [theme]);
-
-  useEffect(() => {
     const handler = (e) => {
       if (e.key === 'Backspace')  handleKeyRef.current('BACKSPACE');
       else if (e.key === 'Enter') handleKeyRef.current('ENTER');
@@ -161,6 +148,17 @@ export default function Game() {
   const gameOver    = gameStatus !== 'playing';
   const keyStates   = computeKeyStates(guesses, feedbacks);
   const riddleState = gameStatus === 'won' ? 'win' : gameStatus === 'lost' ? 'loss' : 'idle';
+
+  const btnStyle = (active) => ({
+    position: 'absolute',
+    background: 'none',
+    border: 'none',
+    cursor: active ? 'pointer' : 'default',
+    fontSize: '1.1rem',
+    color: active ? 'var(--color-stripe)' : 'var(--color-grey-mid)',
+    lineHeight: 1,
+    padding: '0.25rem',
+  });
 
   return (
     <div
@@ -191,39 +189,28 @@ export default function Game() {
         <p style={{ margin: '0.25rem 0 0', fontSize: 'var(--font-size-sm)', fontFamily: 'var(--font-family-display)', fontStyle: 'italic', color: 'var(--color-gold)' }}>
           A E — I O U. The rest are mine.
         </p>
+        {/* Mode toggle — ¶ icon, active only on Saturdays */}
+        <button
+          onClick={quoteAvailable ? onToggleMode : undefined}
+          aria-label="Saturday quote mode"
+          title={quoteAvailable ? 'Saturday quote' : 'Available on Saturdays'}
+          style={{ ...btnStyle(quoteAvailable), top: 0, right: '4rem' }}
+        >
+          ¶
+        </button>
+        {/* Tutorial */}
         <button
           onClick={() => setTutorialOpen(true)}
           aria-label="How to play"
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: '2rem',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '1.1rem',
-            color: 'var(--color-stripe)',
-            lineHeight: 1,
-            padding: '0.25rem',
-          }}
+          style={{ ...btnStyle(true), top: 0, right: '2rem' }}
         >
           ?
         </button>
+        {/* Theme toggle */}
         <button
-          onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+          onClick={toggleTheme}
           aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '1.25rem',
-            color: 'var(--color-stripe)',
-            lineHeight: 1,
-            padding: '0.25rem',
-          }}
+          style={{ ...btnStyle(true), top: 0, right: 0, fontSize: '1.25rem' }}
         >
           {theme === 'dark' ? '☀' : '☾'}
         </button>
@@ -241,14 +228,7 @@ export default function Game() {
       />
 
       {!gameOver && (
-        <div
-          style={{
-            minHeight: '1.25rem',
-            fontSize: 'var(--font-size-sm)',
-            color: 'var(--color-absent)',
-            fontWeight: 600,
-          }}
-        >
+        <div style={{ minHeight: '1.25rem', fontSize: 'var(--font-size-sm)', color: 'var(--color-absent)', fontWeight: 600 }}>
           {error}
         </div>
       )}
@@ -262,7 +242,7 @@ export default function Game() {
       {tutorialOpen && (
         <TutorialModal
           onClose={() => {
-            try { localStorage.setItem('rtb_tutorialSeen', '1'); } catch { /* ignore */ }
+            try { localStorage.setItem('rtb_tutorialSeen', '1'); } catch {}
             setTutorialOpen(false);
           }}
         />

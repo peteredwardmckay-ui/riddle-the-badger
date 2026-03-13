@@ -1,0 +1,210 @@
+[
+  {
+    "id": 1,
+    "quote": "To expect the unexpected shows a thoroughly modern intellect.",
+    "author": "Oscar Wilde",
+    "work": "An Ideal Husband",
+    "year": "1895",
+    "riddleComment": "He would have found you adequate."
+  },
+  {
+    "id": 2,
+    "quote": "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.",
+    "author": "Jane Austen",
+    "work": "Pride and Prejudice",
+    "year": "1813",
+    "riddleComment": "She was precise about everything. She would have been precise about this."
+  },
+  {
+    "id": 3,
+    "quote": "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness.",
+    "author": "Charles Dickens",
+    "work": "A Tale of Two Cities",
+    "year": "1859",
+    "riddleComment": "He wrote very long books. This is one sentence."
+  },
+  {
+    "id": 4,
+    "quote": "All happy families are alike; each unhappy family is unhappy in its own way.",
+    "author": "Leo Tolstoy",
+    "work": "Anna Karenina",
+    "year": "1878",
+    "riddleComment": "He wrote longer books than Dickens. He had opinions about farming."
+  },
+  {
+    "id": 5,
+    "quote": "So we beat on, boats against the current, borne back ceaselessly into the past.",
+    "author": "F. Scott Fitzgerald",
+    "work": "The Great Gatsby",
+    "year": "1925",
+    "riddleComment": "He wrote this sentence last. He knew it."
+  },
+  {
+    "id": 6,
+    "quote": "The world breaks everyone, and afterward, some are strong at the broken places.",
+    "author": "Ernest Hemingway",
+    "work": "A Farewell to Arms",
+    "year": "1929",
+    "riddleComment": "He kept sentences short. Except this one."
+  },
+  {
+    "id": 7,
+    "quote": "In the depth of winter, I finally learned that within me there lay an invincible summer.",
+    "author": "Albert Camus",
+    "work": "Return to Tipasa",
+    "year": "1952",
+    "riddleComment": "He was French. He was not warm about it."
+  },
+  {
+    "id": 8,
+    "quote": "Not all those who wander are lost.",
+    "author": "J.R.R. Tolkien",
+    "work": "The Fellowship of the Ring",
+    "year": "1954",
+    "riddleComment": "He wrote this in a footnote. He had many footnotes."
+  },
+  {
+    "id": 9,
+    "quote": "There is no greater agony than bearing an untold story inside you.",
+    "author": "Maya Angelou",
+    "work": "I Know Why the Caged Bird Sings",
+    "year": "1969",
+    "riddleComment": "She knew the weight of words."
+  },
+  {
+    "id": 10,
+    "quote": "We are all of us the walking wounded.",
+    "author": "Dean Koontz",
+    "work": "One Door Away from Heaven",
+    "year": "2001",
+    "riddleComment": "He writes quickly. He has not stopped."
+  },
+  {
+    "id": 11,
+    "quote": "All the world's a stage, and all the men and women merely players.",
+    "author": "William Shakespeare",
+    "work": "As You Like It",
+    "year": "1599",
+    "riddleComment": "He wrote this for a Wednesday matinee."
+  },
+  {
+    "id": 12,
+    "quote": "Tell all the truth but tell it slant.",
+    "author": "Emily Dickinson",
+    "work": "Tell all the truth but tell it slant",
+    "year": "1872",
+    "riddleComment": "She preferred the slant."
+  },
+  {
+    "id": 13,
+    "quote": "A book must be the axe for the frozen sea within us.",
+    "author": "Franz Kafka",
+    "work": "Letter to Oskar Pollak",
+    "year": "1904",
+    "riddleComment": "He wrote this in a letter. He wrote many letters."
+  },
+  {
+    "id": 14,
+    "quote": "Ever tried. Ever failed. No matter. Try again. Fail again. Fail better.",
+    "author": "Samuel Beckett",
+    "work": "Worstward Ho",
+    "year": "1983",
+    "riddleComment": "He considered this optimistic."
+  },
+  {
+    "id": 15,
+    "quote": "I took a deep breath and listened to the old brag of my heart: I am, I am, I am.",
+    "author": "Sylvia Plath",
+    "work": "The Bell Jar",
+    "year": "1963",
+    "riddleComment": "She was listening carefully."
+  },
+  {
+    "id": 16,
+    "quote": "Pain and suffering are always inevitable for a large intelligence and a deep heart.",
+    "author": "Fyodor Dostoevsky",
+    "work": "Crime and Punishment",
+    "year": "1866",
+    "riddleComment": "He found this comforting."
+  },
+  {
+    "id": 17,
+    "quote": "You never know what worse luck your bad luck has saved you from.",
+    "author": "Cormac McCarthy",
+    "work": "No Country for Old Men",
+    "year": "2005",
+    "riddleComment": "He used no quotation marks. He had a reason."
+  },
+  {
+    "id": 18,
+    "quote": "If you only read the books that everyone else is reading, you can only think what everyone else is thinking.",
+    "author": "Haruki Murakami",
+    "work": "Norwegian Wood",
+    "year": "1987",
+    "riddleComment": "He runs marathons. He has written about this at length."
+  },
+  {
+    "id": 19,
+    "quote": "The only thing that makes life possible is permanent, intolerable uncertainty.",
+    "author": "Ursula K. Le Guin",
+    "work": "The Left Hand of Darkness",
+    "year": "1969",
+    "riddleComment": "She built worlds. She had rules for them."
+  },
+  {
+    "id": 20,
+    "quote": "Things fall apart; the centre cannot hold; mere anarchy is loosed upon the world.",
+    "author": "W.B. Yeats",
+    "work": "The Second Coming",
+    "year": "1919",
+    "riddleComment": "He was concerned about the falcon."
+  },
+  {
+    "id": 21,
+    "quote": "Freeing yourself was one thing; claiming ownership of that freed self was another.",
+    "author": "Toni Morrison",
+    "work": "Beloved",
+    "year": "1987",
+    "riddleComment": "She knew the difference."
+  },
+  {
+    "id": 22,
+    "quote": "A woman must have money and a room of her own if she is to write fiction.",
+    "author": "Virginia Woolf",
+    "work": "A Room of One's Own",
+    "year": "1929",
+    "riddleComment": "She had strong opinions about rooms."
+  },
+  {
+    "id": 23,
+    "quote": "The secret of getting ahead is getting started.",
+    "author": "Mark Twain",
+    "work": "Various attributed",
+    "year": "c. 1880",
+    "riddleComment": "He was not surprised."
+  },
+  {
+    "id": 24,
+    "quote": "He was still too young to know that the heart's memory eliminates the bad and magnifies the good.",
+    "author": "Gabriel García Márquez",
+    "work": "Love in the Time of Cholera",
+    "year": "1985",
+    "riddleComment": "He was Colombian. He was not brief about it."
+  },
+  {
+    "id": 25,
+    "quote": "Think you're escaping and run into yourself. Longest way round is the shortest way home.",
+    "author": "James Joyce",
+    "work": "Ulysses",
+    "year": "1922",
+    "riddleComment": "He considered this straightforward."
+  },
+  {
+    "id": 26,
+    "quote": "I am not afraid of storms, for I am learning how to sail my ship.",
+    "author": "Louisa May Alcott",
+    "work": "Little Women",
+    "year": "1868",
+    "riddleComment": "She wrote it in six weeks. She was not asked if she wanted to."
+  }
+]
