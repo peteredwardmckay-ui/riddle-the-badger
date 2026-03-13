@@ -341,7 +341,7 @@ function CompletionModal({ guessCount, quoteData, onClose }) {
             fontFamily: 'var(--font-family-base)', cursor: 'pointer', letterSpacing: '0.02em',
           }}
         >
-          Come back Saturday.
+          Come back next Saturday for another Quoterday.
         </button>
       </div>
     </div>
