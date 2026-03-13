@@ -62,17 +62,18 @@ function getInitialTutorial() {
   try { return !localStorage.getItem('rtb_tutorialSeen'); } catch { return true; }
 }
 
-// Read saved game once at module load — before React renders.
-const _initialSaved = loadSavedGame();
-
 export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode }) {
-  const [guesses, setGuesses]           = useState(_initialSaved?.guesses    ?? []);
-  const [feedbacks, setFeedbacks]       = useState(_initialSaved?.feedbacks  ?? []);
+  // Read saved game lazily on each mount so toggling back from quote mode
+  // picks up the completed state rather than the stale module-load snapshot.
+  const [initialSaved] = useState(loadSavedGame);
+
+  const [guesses, setGuesses]           = useState(() => initialSaved?.guesses    ?? []);
+  const [feedbacks, setFeedbacks]       = useState(() => initialSaved?.feedbacks  ?? []);
   const [currentGuess, setCurrentGuess] = useState('');
-  const [gameStatus, setGameStatus]     = useState(_initialSaved?.gameStatus ?? 'playing');
+  const [gameStatus, setGameStatus]     = useState(() => initialSaved?.gameStatus ?? 'playing');
   const [error, setError]               = useState('');
-  const [modalOpen, setModalOpen]       = useState(_initialSaved?.gameStatus === 'won' || _initialSaved?.gameStatus === 'lost');
-  const [stats, setStats]               = useState(_initialSaved ? getStats() : null);
+  const [modalOpen, setModalOpen]       = useState(() => initialSaved?.gameStatus === 'won' || initialSaved?.gameStatus === 'lost');
+  const [stats, setStats]               = useState(() => initialSaved ? getStats() : null);
   const [tutorialOpen, setTutorialOpen] = useState(getInitialTutorial);
 
   const handleKeyRef = useRef(null);
