@@ -194,7 +194,12 @@ export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode 
           onClick={quoteAvailable ? onToggleMode : undefined}
           aria-label="Saturday quote mode"
           title={quoteAvailable ? 'Saturday quote' : 'Available on Saturdays'}
-          style={{ ...btnStyle(quoteAvailable), top: 0, right: '4rem' }}
+          style={{
+            ...btnStyle(quoteAvailable),
+            top: 0,
+            right: '4rem',
+            color: quoteAvailable ? 'var(--color-gold)' : 'var(--color-grey-mid)',
+          }}
         >
           ¶
         </button>

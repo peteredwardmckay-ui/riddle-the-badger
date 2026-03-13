@@ -12,7 +12,7 @@ function getInitialTheme() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
-const isSaturday     = new Date().getDay() === 6;
+const isSaturday     = new Date().getDay() === 6 || new URLSearchParams(window.location.search).has('testSaturday');
 const quoteAvailable = isSaturday;
 
 export default function App() {

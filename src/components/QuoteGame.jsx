@@ -3,6 +3,7 @@ import { getWeeklyQuote } from '../game/quoteWord';
 import quotes from '../data/quotes.json';
 import guessList from '../game/guessList';
 import wordList from '../game/wordList';
+import QuoteTutorialModal from './QuoteTutorialModal';
 
 const VOWELS        = new Set('AEIOU'.split(''));
 const ALL_CONSONANTS = 'BCDFGHJKLMNPQRSTVWXYZ'.split('');
@@ -313,10 +314,10 @@ function CompletionModal({ guessCount, quoteData, onClose }) {
         <p style={{ margin: 0, fontSize: 'var(--font-size-sm)', color: 'var(--color-stripe)', fontWeight: 600 }}>
           — {quoteData.author}, <em>{quoteData.work}</em>, {quoteData.year}
         </p>
-        <p style={{ margin: 0, fontSize: 'var(--font-size-sm)', color: 'var(--color-gold)', fontFamily: 'var(--font-family-display)', fontStyle: 'italic' }}>
+        <p style={{ margin: 0, fontSize: 'var(--font-size-base)', color: 'var(--color-gold)', fontFamily: 'var(--font-family-display)', fontStyle: 'italic' }}>
           {quoteData.riddleComment}
         </p>
-        <p style={{ margin: 0, fontSize: 'var(--font-size-sm)', color: 'var(--color-text)' }}>
+        <p style={{ margin: 0, fontSize: 'var(--font-size-base)', color: 'var(--color-text)' }}>
           Solved in {guessCount} {guessCount === 1 ? 'guess' : 'guesses'}. Par: {PAR}.
         </p>
         <button
@@ -341,7 +342,7 @@ function CompletionModal({ guessCount, quoteData, onClose }) {
             fontFamily: 'var(--font-family-base)', cursor: 'pointer', letterSpacing: '0.02em',
           }}
         >
-          Come back next Saturday for another Quoterday.
+          Come back Saturday.
         </button>
       </div>
     </div>
@@ -351,15 +352,18 @@ function CompletionModal({ guessCount, quoteData, onClose }) {
 // ─── main component ──────────────────────────────────────────────────────────
 
 export default function QuoteGame({ theme, toggleTheme, quoteAvailable, onToggleMode }) {
-  const isSaturday = new Date().getDay() === 6;
+  const isSaturday = new Date().getDay() === 6 || new URLSearchParams(window.location.search).has('testSaturday');
 
-  const [found,      setFound]      = useState(_saved?.found      ?? new Set());
-  const [absent,     setAbsent]     = useState(_saved?.absent     ?? new Set());
-  const [guessCount, setGuessCount] = useState(_saved?.guessCount ?? 0);
-  const [complete,   setComplete]   = useState(_saved?.complete   ?? false);
-  const [input,      setInput]      = useState('');
-  const [error,      setError]      = useState('');
-  const [modalOpen,  setModalOpen]  = useState(_saved?.complete   ?? false);
+  const [found,         setFound]         = useState(_saved?.found      ?? new Set());
+  const [absent,        setAbsent]        = useState(_saved?.absent     ?? new Set());
+  const [guessCount,    setGuessCount]    = useState(_saved?.guessCount ?? 0);
+  const [complete,      setComplete]      = useState(_saved?.complete   ?? false);
+  const [input,         setInput]         = useState('');
+  const [error,         setError]         = useState('');
+  const [modalOpen,     setModalOpen]     = useState(_saved?.complete   ?? false);
+  const [tutorialOpen,  setTutorialOpen]  = useState(() => {
+    try { return !localStorage.getItem('rtb_quoteTutorialSeen'); } catch { return true; }
+  });
   const inputRef = useRef(null);
 
   useEffect(() => { inputRef.current?.focus(); }, []);
@@ -427,9 +431,10 @@ export default function QuoteGame({ theme, toggleTheme, quoteAvailable, onToggle
           Riddle the Badger
         </h1>
         <p style={{ margin: '0.25rem 0 0', fontSize: 'var(--font-size-sm)', fontFamily: 'var(--font-family-display)', fontStyle: 'italic', color: 'var(--color-gold)' }}>
-          Saturday Quote
+          Quoterday.
         </p>
-        <button onClick={onToggleMode} aria-label="Switch to daily game" style={{ ...btnStyle(true), top: 0, right: '2rem' }}>¶</button>
+        <button onClick={onToggleMode} aria-label="Switch to daily game" style={{ ...btnStyle(true), top: 0, right: '4rem' }}>¶</button>
+        <button onClick={() => setTutorialOpen(true)} aria-label="How to play" style={{ ...btnStyle(true), top: 0, right: '2rem' }}>?</button>
         <button onClick={toggleTheme} aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} style={{ ...btnStyle(true), top: 0, right: 0, fontSize: '1.25rem' }}>
           {theme === 'dark' ? '☀' : '☾'}
         </button>
@@ -514,6 +519,15 @@ export default function QuoteGame({ theme, toggleTheme, quoteAvailable, onToggle
           </>
         )}
       </div>
+
+      {tutorialOpen && (
+        <QuoteTutorialModal
+          onClose={() => {
+            try { localStorage.setItem('rtb_quoteTutorialSeen', '1'); } catch {}
+            setTutorialOpen(false);
+          }}
+        />
+      )}
 
       {modalOpen && (
         <CompletionModal
