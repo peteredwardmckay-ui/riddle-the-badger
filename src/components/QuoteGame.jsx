@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { getWeeklyQuote } from '../game/quoteWord';
 import quotes from '../data/quotes.json';
 import wordList from '../game/wordList';
+import britishWords from '../data/british.json';
 import QuoteTutorialModal from './QuoteTutorialModal';
 
 const VOWELS        = new Set('AEIOU'.split(''));
@@ -352,7 +353,7 @@ export default function QuoteGame({ theme, toggleTheme, quoteAvailable, onToggle
   const isSaturday = new Date().getDay() === 6 || new URLSearchParams(window.location.search).has('testSaturday');
 
   const VALID_WORDS = useMemo(
-    () => new Set([...guessList, ...wordList, ...quoteWords]),
+    () => new Set([...guessList, ...wordList, ...britishWords, ...quoteWords]),
     [guessList]
   );
 

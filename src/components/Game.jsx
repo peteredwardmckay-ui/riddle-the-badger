@@ -4,6 +4,7 @@ import { getFeedback } from '../game/feedback';
 import { getDailyWord } from '../game/dailyWord';
 import { saveResult, getStats } from '../game/streak';
 import wordList from '../game/wordList';
+import britishWords from '../data/british.json';
 import GuessGrid from './GuessGrid';
 import Keyboard from './Keyboard';
 import RiddleCharacter from './RiddleCharacter';
@@ -74,7 +75,7 @@ export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode,
   const [stats, setStats]               = useState(() => initialSaved ? getStats() : null);
   const [tutorialOpen, setTutorialOpen] = useState(getInitialTutorial);
 
-  const VALID_WORDS = useMemo(() => new Set([...guessList, ...wordList]), [guessList]);
+  const VALID_WORDS = useMemo(() => new Set([...guessList, ...wordList, ...britishWords]), [guessList]);
 
   const handleKeyRef = useRef(null);
 
