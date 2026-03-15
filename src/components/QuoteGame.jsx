@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { getWeeklyQuote } from '../game/quoteWord';
 import quotes from '../data/quotes.json';
-import guessList from '../game/guessList';
 import wordList from '../game/wordList';
 import QuoteTutorialModal from './QuoteTutorialModal';
 
@@ -48,9 +47,8 @@ const { quote: QUOTE_DATA, weekIndex: WEEK_INDEX } = getWeeklyQuote(quotes);
 const QUOTE_CONSONANTS = getQuoteConsonants(QUOTE_DATA.quote);
 const PAR              = QUOTE_CONSONANTS.size;
 
-// Valid words: full guess list + all words that appear in the quote itself
-const quoteWords  = new Set((QUOTE_DATA.quote.toLowerCase().match(/[a-z]+/g) ?? []).map(w => w.toUpperCase()));
-const VALID_WORDS = new Set([...guessList, ...wordList, ...quoteWords]);
+// Words that appear in the quote itself (module-level — quote doesn't change)
+const quoteWords = new Set((QUOTE_DATA.quote.toLowerCase().match(/[a-z]+/g) ?? []).map(w => w.toUpperCase()));
 
 // ─── sub-components ──────────────────────────────────────────────────────────
 
@@ -350,8 +348,13 @@ function CompletionModal({ guessCount, quoteData, onClose }) {
 
 // ─── main component ──────────────────────────────────────────────────────────
 
-export default function QuoteGame({ theme, toggleTheme, quoteAvailable, onToggleMode }) {
+export default function QuoteGame({ theme, toggleTheme, quoteAvailable, onToggleMode, guessList }) {
   const isSaturday = new Date().getDay() === 6 || new URLSearchParams(window.location.search).has('testSaturday');
+
+  const VALID_WORDS = useMemo(
+    () => new Set([...guessList, ...wordList, ...quoteWords]),
+    [guessList]
+  );
 
   const [initialSaved] = useState(() => loadSaved(WEEK_INDEX));
 

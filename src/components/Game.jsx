@@ -1,10 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { getSkeleton } from '../game/skeleton';
 import { getFeedback } from '../game/feedback';
 import { getDailyWord } from '../game/dailyWord';
 import { saveResult, getStats } from '../game/streak';
 import wordList from '../game/wordList';
-import guessList from '../game/guessList';
 import GuessGrid from './GuessGrid';
 import Keyboard from './Keyboard';
 import RiddleCharacter from './RiddleCharacter';
@@ -17,7 +16,6 @@ const CONSONANTS  = new Set('BCDFGHJKLMNPQRSTVWXYZ'.split(''));
 // Computed once — same word for all players on a given day.
 const ANSWER = getDailyWord(wordList);
 const { skeleton: SKELETON, consonants: ANSWER_CONSONANTS, consonantPositions: CONSONANT_POSITIONS } = getSkeleton(ANSWER);
-const VALID_WORDS = new Set([...guessList, ...wordList]);
 
 function computeKeyStates(guesses, feedbacks) {
   const priority = { correct: 3, present: 2, absent: 1 };
@@ -62,7 +60,7 @@ function getInitialTutorial() {
   try { return !localStorage.getItem('rtb_tutorialSeen'); } catch { return true; }
 }
 
-export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode }) {
+export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode, guessList }) {
   // Read saved game lazily on each mount so toggling back from quote mode
   // picks up the completed state rather than the stale module-load snapshot.
   const [initialSaved] = useState(loadSavedGame);
@@ -75,6 +73,8 @@ export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode 
   const [modalOpen, setModalOpen]       = useState(() => initialSaved?.gameStatus === 'won' || initialSaved?.gameStatus === 'lost');
   const [stats, setStats]               = useState(() => initialSaved ? getStats() : null);
   const [tutorialOpen, setTutorialOpen] = useState(getInitialTutorial);
+
+  const VALID_WORDS = useMemo(() => new Set([...guessList, ...wordList]), [guessList]);
 
   const handleKeyRef = useRef(null);
 

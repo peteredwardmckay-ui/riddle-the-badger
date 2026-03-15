@@ -16,20 +16,26 @@ const isSaturday     = new Date().getDay() === 6 || new URLSearchParams(window.l
 const quoteAvailable = isSaturday;
 
 export default function App() {
-  const [phase, setPhase]       = useState('showing');
-  const [ready, setReady]       = useState(false);
-  const [elapsed, setElapsed]   = useState(false);
-  const [theme, setTheme]       = useState(getInitialTheme);
-  const [gameMode, setGameMode] = useState('daily');
+  const [phase, setPhase]         = useState('showing');
+  const [guessesLoaded, setGuessesLoaded] = useState(false);
+  const [elapsed, setElapsed]     = useState(false);
+  const [guessList, setGuessList] = useState([]);
+  const [theme, setTheme]         = useState(getInitialTheme);
+  const [gameMode, setGameMode]   = useState('daily');
 
-  useEffect(() => { setReady(true); }, []);
+  useEffect(() => {
+    fetch('/guesses.json')
+      .then(r => r.json())
+      .then(data => { setGuessList(data); setGuessesLoaded(true); })
+      .catch(() => setGuessesLoaded(true)); // fall back to empty — wordList still covers answers
+  }, []);
   useEffect(() => {
     const t = setTimeout(() => setElapsed(true), 1000);
     return () => clearTimeout(t);
   }, []);
   useEffect(() => {
-    if (ready && elapsed) setPhase('fading');
-  }, [ready, elapsed]);
+    if (guessesLoaded && elapsed) setPhase('fading');
+  }, [guessesLoaded, elapsed]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -42,8 +48,8 @@ export default function App() {
   return (
     <>
       {gameMode === 'daily'
-        ? <Game   theme={theme} toggleTheme={toggleTheme} quoteAvailable={quoteAvailable} onToggleMode={toggleMode} />
-        : <QuoteGame theme={theme} toggleTheme={toggleTheme} quoteAvailable={quoteAvailable} onToggleMode={toggleMode} />
+        ? <Game   theme={theme} toggleTheme={toggleTheme} quoteAvailable={quoteAvailable} onToggleMode={toggleMode} guessList={guessList} />
+        : <QuoteGame theme={theme} toggleTheme={toggleTheme} quoteAvailable={quoteAvailable} onToggleMode={toggleMode} guessList={guessList} />
       }
 
       {phase !== 'done' && (
