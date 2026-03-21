@@ -325,3 +325,71 @@ Riddle speaks in short, dry declaratives. If adding any UI copy, follow his voic
 - ✗ "So close! Better luck next time!"
 
 No exclamation marks in Riddle's voice. Ever.
+
+---
+
+## Word List (`answers.json`)
+
+- **Epoch:** March 12, 2026 (day 0). Words cycle by `dayIndex % wordList.length`.
+- **Current size:** 360 words — enough for ~360 days from epoch (approx. March 2027).
+- **Length pattern:** Groups of 6, cycling 4→5→6→7→8→9 letters. Every 6 consecutive
+  words contain one of each length. Maintain this pattern when adding new words.
+- **British spellings required** — COLOURFUL not COLORFUL, TRAVELLING not TRAVELING,
+  RECOGNISE not RECOGNIZE, etc.
+- **No proper nouns. No words where Y is the only vowel-sound** (MYTH, LYNX produce
+  no blanks — valid but unsatisfying).
+- To calculate which word plays on a given date:
+  ```
+  dayIndex = floor((localDate - 2026-03-12) / 86400000)
+  word = answers[dayIndex % answers.length]
+  ```
+
+## Valid Guess Lists
+
+- `guesses.json` — ~61K words, the main valid-guess dictionary
+- `british.json` — ~285 lines of British English spellings (COLOUR, HONOUR, FAVOUR,
+  NEIGHBOUR, etc.) that supplement `guesses.json`. Both lists are checked on guess
+  validation. Add British variants here if players report valid words being rejected.
+
+---
+
+## Quote Game (`QuoteGame.jsx`)
+
+A separate weekly game mode. Each week Riddle presents a literary quote with all
+its consonants stolen. The player guesses consonants one at a time (like Hangman)
+to restore the full quote.
+
+### Cadence
+- One new quote per week, advancing every 7 days from the same epoch (March 12, 2026).
+- Week index: `floor(dayIndex / 7)`, cycling over `quotes.length`.
+- State persisted to `localStorage` as `rtb_quoteState` (weekIndex, found, absent,
+  guessCount, complete).
+
+### Quote data format (`quotes.json`)
+```json
+{
+  "id": 1,
+  "quote": "The full quote text.",
+  "author": "Author Name",
+  "work": "Work Title",
+  "year": "1895",
+  "riddleComment": "Short dry comment in Riddle's voice."
+}
+```
+
+### `riddleComment` voice rules
+Same as all Riddle copy — short, dry, declarative, no exclamation marks. Typically
+1–2 sentences. Comments should reflect something true and slightly unexpected about
+the author or the context of the quote. Examples:
+- "He wrote this in a letter. He wrote many letters." (Kafka)
+- "He put the clocks wrong on purpose. You noticed." (Orwell)
+- "She wrote under a man's name first. She stopped." (Charlotte Brontë)
+- "He went blind. He was then made director of the National Library of Argentina." (Borges)
+
+### Quote curation rules
+- Famous, well-known quotes from notable literary authors — nothing obscure
+- Verify every attribution before adding — do not rely on "commonly attributed"
+  sources; trace to a primary source (the actual book, letter, speech)
+- British spellings in quote text where the author would have used them
+- **Current count:** 52 quotes (ids 1–52), enough for ~52 weeks (~1 year) from epoch
+- To add more: continue from id 53, maintain the same JSON structure

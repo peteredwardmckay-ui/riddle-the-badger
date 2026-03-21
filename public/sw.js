@@ -1,4 +1,4 @@
-const CACHE = 'rtb-v2';
+const CACHE = 'rtb-v3';
 
 const PRECACHE = [
   '/',

@@ -73,11 +73,11 @@
   },
   {
     "id": 10,
-    "quote": "We are all of us the walking wounded.",
-    "author": "Dean Koontz",
-    "work": "One Door Away from Heaven",
-    "year": "2001",
-    "riddleComment": "He writes quickly. He has not stopped."
+    "quote": "Not everything that is faced can be changed; but nothing can be changed until it is faced.",
+    "author": "James Baldwin",
+    "work": "As Much Truth As One Can Bear",
+    "year": "1962",
+    "riddleComment": "He wrote this for the New York Times. They were not ready."
   },
   {
     "id": 11,
@@ -177,11 +177,11 @@
   },
   {
     "id": 23,
-    "quote": "The secret of getting ahead is getting started.",
-    "author": "Mark Twain",
-    "work": "Various attributed",
-    "year": "c. 1880",
-    "riddleComment": "He was not surprised."
+    "quote": "Be patient toward all that is unsolved in your heart and try to love the questions themselves.",
+    "author": "Rainer Maria Rilke",
+    "work": "Letters to a Young Poet",
+    "year": "1903",
+    "riddleComment": "He wrote this to a stranger. The stranger kept the letters."
   },
   {
     "id": 24,
@@ -206,5 +206,213 @@
     "work": "Little Women",
     "year": "1868",
     "riddleComment": "She wrote it in six weeks. She was not asked if she wanted to."
+  },
+  {
+    "id": 27,
+    "quote": "To be, or not to be, that is the question.",
+    "author": "William Shakespeare",
+    "work": "Hamlet",
+    "year": "1603",
+    "riddleComment": "He left it open. He often did."
+  },
+  {
+    "id": 28,
+    "quote": "You must go on. I can't go on. I'll go on.",
+    "author": "Samuel Beckett",
+    "work": "The Unnamable",
+    "year": "1953",
+    "riddleComment": "He was Irish. He wrote this in French first."
+  },
+  {
+    "id": 29,
+    "quote": "It is not down in any map; true places never are.",
+    "author": "Herman Melville",
+    "work": "Moby-Dick",
+    "year": "1851",
+    "riddleComment": "He had more to say after this. Much more."
+  },
+  {
+    "id": 30,
+    "quote": "The oldest and strongest emotion of mankind is fear, and the oldest and strongest kind of fear is fear of the unknown.",
+    "author": "H.P. Lovecraft",
+    "work": "Supernatural Horror in Literature",
+    "year": "1927",
+    "riddleComment": "He was afraid of many things. He catalogued them."
+  },
+  {
+    "id": 31,
+    "quote": "Until the lions have their own historians, the history of the hunt will always glorify the hunter.",
+    "author": "Chinua Achebe",
+    "work": "The Paris Review interview",
+    "year": "1994",
+    "riddleComment": "He was Nigerian. He was precise about who gets to tell the story."
+  },
+  {
+    "id": 32,
+    "quote": "A word after a word after a word is power.",
+    "author": "Margaret Atwood",
+    "work": "Spelling",
+    "year": "1981",
+    "riddleComment": "She wrote this as a poem. She has been right about most things."
+  },
+  {
+    "id": 33,
+    "quote": "I am no bird; and no net ensnares me.",
+    "author": "Charlotte Brontë",
+    "work": "Jane Eyre",
+    "year": "1847",
+    "riddleComment": "She wrote under a man's name first. She stopped."
+  },
+  {
+    "id": 34,
+    "quote": "The two most powerful warriors are patience and time.",
+    "author": "Leo Tolstoy",
+    "work": "War and Peace",
+    "year": "1869",
+    "riddleComment": "He also had opinions about Napoleon. At length."
+  },
+  {
+    "id": 35,
+    "quote": "I thought how unpleasant it is to be locked out; and I thought how it is worse, perhaps, to be locked in.",
+    "author": "Virginia Woolf",
+    "work": "A Room of One's Own",
+    "year": "1929",
+    "riddleComment": "She was thinking about libraries. Also everything else."
+  },
+  {
+    "id": 36,
+    "quote": "The cradle rocks above an abyss, and common sense tells us that our existence is but a brief crack of light between two eternities of darkness.",
+    "author": "Vladimir Nabokov",
+    "work": "Speak, Memory",
+    "year": "1951",
+    "riddleComment": "He opened with this. He was not trying to comfort you."
+  },
+  {
+    "id": 37,
+    "quote": "Medicine is my lawful wife and literature my mistress; when I tire of one, I spend the night with the other.",
+    "author": "Anton Chekhov",
+    "work": "Letter to Alexei Suvorin",
+    "year": "1888",
+    "riddleComment": "He was a doctor. He wrote plays on the side."
+  },
+  {
+    "id": 38,
+    "quote": "The human heart has hidden treasures, in secret kept, in silence sealed.",
+    "author": "Charlotte Brontë",
+    "work": "Evening Solace",
+    "year": "1846",
+    "riddleComment": "She wrote this as a poem. She wrote everything."
+  },
+  {
+    "id": 39,
+    "quote": "Man is condemned to be free.",
+    "author": "Jean-Paul Sartre",
+    "work": "Existentialism is a Humanism",
+    "year": "1945",
+    "riddleComment": "He considered this good news."
+  },
+  {
+    "id": 40,
+    "quote": "It was a bright cold day in April, and the clocks were striking thirteen.",
+    "author": "George Orwell",
+    "work": "Nineteen Eighty-Four",
+    "year": "1949",
+    "riddleComment": "He put the clocks wrong on purpose. You noticed."
+  },
+  {
+    "id": 41,
+    "quote": "Cowards die many times before their deaths; the valiant never taste of death but once.",
+    "author": "William Shakespeare",
+    "work": "Julius Caesar",
+    "year": "1599",
+    "riddleComment": "He wrote a lot about death. He was productive."
+  },
+  {
+    "id": 42,
+    "quote": "The most important things are the hardest to say.",
+    "author": "Stephen King",
+    "work": "The Body",
+    "year": "1982",
+    "riddleComment": "He knows what he is doing. He has been doing it for a long time."
+  },
+  {
+    "id": 43,
+    "quote": "In the beginning was the Word.",
+    "author": "The Bible",
+    "work": "Gospel of John",
+    "year": "c. 90",
+    "riddleComment": "This is his kind of opening."
+  },
+  {
+    "id": 44,
+    "quote": "The cure for anything is salt water: sweat, tears, or the sea.",
+    "author": "Isak Dinesen",
+    "work": "Seven Gothic Tales",
+    "year": "1934",
+    "riddleComment": "She wrote under a man's name. The sea remained hers."
+  },
+  {
+    "id": 45,
+    "quote": "Time is the longest distance between two places.",
+    "author": "Tennessee Williams",
+    "work": "The Glass Menagerie",
+    "year": "1944",
+    "riddleComment": "He wrote it for the stage. It still holds."
+  },
+  {
+    "id": 46,
+    "quote": "All animals are equal, but some animals are more equal than others.",
+    "author": "George Orwell",
+    "work": "Animal Farm",
+    "year": "1945",
+    "riddleComment": "He put it on a barn wall. It was meant to be noticed."
+  },
+  {
+    "id": 47,
+    "quote": "I want to do with you what spring does with the cherry trees.",
+    "author": "Pablo Neruda",
+    "work": "Every Day You Play",
+    "year": "1924",
+    "riddleComment": "He was Chilean. He was not subtle about it."
+  },
+  {
+    "id": 48,
+    "quote": "I have always imagined that Paradise will be a kind of library.",
+    "author": "Jorge Luis Borges",
+    "work": "Poem of the Gifts",
+    "year": "1960",
+    "riddleComment": "He went blind. He was then made director of the National Library of Argentina."
+  },
+  {
+    "id": 49,
+    "quote": "You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose.",
+    "author": "Dr. Seuss",
+    "work": "Oh, the Places You'll Go",
+    "year": "1990",
+    "riddleComment": "He wrote in rhyme. The advice was serious."
+  },
+  {
+    "id": 50,
+    "quote": "What's in a name? That which we call a rose by any other name would smell as sweet.",
+    "author": "William Shakespeare",
+    "work": "Romeo and Juliet",
+    "year": "1597",
+    "riddleComment": "She asked a reasonable question. Nobody listened."
+  },
+  {
+    "id": 51,
+    "quote": "One must imagine Sisyphus happy.",
+    "author": "Albert Camus",
+    "work": "The Myth of Sisyphus",
+    "year": "1942",
+    "riddleComment": "He considered this a solution."
+  },
+  {
+    "id": 52,
+    "quote": "There is a pleasure in the pathless woods, there is a rapture on the lonely shore.",
+    "author": "Lord Byron",
+    "work": "Childe Harold's Pilgrimage",
+    "year": "1818",
+    "riddleComment": "He found solitude rapturous. He was also rarely alone."
   }
 ]
