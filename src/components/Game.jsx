@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { getSkeleton } from '../game/skeleton';
 import { getFeedback } from '../game/feedback';
-import { getDailyWord } from '../game/dailyWord';
+import { getDailyWord, getDailyHint } from '../game/dailyWord';
 import { saveResult, getStats } from '../game/streak';
-import wordList from '../game/wordList';
+import wordList, { hints } from '../game/wordList';
 import britishWords from '../data/british.json';
 import GuessGrid from './GuessGrid';
 import Keyboard from './Keyboard';
@@ -16,6 +16,7 @@ const CONSONANTS  = new Set('BCDFGHJKLMNPQRSTVWXYZ'.split(''));
 
 // Computed once — same word for all players on a given day.
 const ANSWER = getDailyWord(wordList);
+const ANSWER_HINT = getDailyHint(hints);
 const { skeleton: SKELETON, consonants: ANSWER_CONSONANTS, consonantPositions: CONSONANT_POSITIONS } = getSkeleton(ANSWER);
 
 function computeKeyStates(guesses, feedbacks) {
@@ -74,6 +75,7 @@ export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode,
   const [modalOpen, setModalOpen]       = useState(() => initialSaved?.gameStatus === 'won' || initialSaved?.gameStatus === 'lost');
   const [stats, setStats]               = useState(() => initialSaved ? getStats() : null);
   const [tutorialOpen, setTutorialOpen] = useState(getInitialTutorial);
+  const [hintVisible, setHintVisible] = useState(false);
 
   const VALID_WORDS = useMemo(() => new Set([...guessList, ...wordList, ...britishWords]), [guessList]);
 
@@ -120,11 +122,13 @@ export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode,
         setStats(saveResult({ won: true,  guesses: newGuesses.length }));
         saveGame(newGuesses, newFeedbacks, 'won');
         setModalOpen(true);
+        window.gtag?.('event', 'puzzle_solved', { word: ANSWER, guesses: newGuesses.length });
       } else if (newGuesses.length >= MAX_GUESSES) {
         setGameStatus('lost');
         setStats(saveResult({ won: false, guesses: newGuesses.length }));
         saveGame(newGuesses, newFeedbacks, 'lost');
         setModalOpen(true);
+        window.gtag?.('event', 'puzzle_failed', { word: ANSWER });
       }
       return;
     }
@@ -234,11 +238,33 @@ export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode,
         gameOver={gameOver}
       />
 
-      {!gameOver && (
-        <div style={{ minHeight: '1.25rem', fontSize: 'var(--font-size-sm)', color: 'var(--color-absent)', fontWeight: 600 }}>
-          {error}
-        </div>
-      )}
+      <div style={{ width: '100%', minHeight: '3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem' }}>
+        {!gameOver && (
+          <div style={{ minHeight: '1.25rem', fontSize: 'var(--font-size-sm)', color: 'var(--color-absent)', fontWeight: 600 }}>
+            {error}
+          </div>
+        )}
+        {hintVisible ? (
+          <p style={{ margin: 0, fontSize: 'var(--font-size-sm)', color: 'var(--color-text)', fontFamily: 'var(--font-family-display)', fontStyle: 'italic', textAlign: 'center' }}>
+            {ANSWER_HINT}
+          </p>
+        ) : (
+          <button
+            onClick={() => setHintVisible(true)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: 'var(--font-size-sm)',
+              color: 'var(--color-gold)',
+              fontFamily: 'var(--font-family-display)',
+              padding: '0.25rem 0.5rem',
+            }}
+          >
+            hint
+          </button>
+        )}
+      </div>
 
       {!gameOver && (
         <div style={{ marginTop: 'auto', width: '100%' }}>
