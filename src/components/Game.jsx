@@ -306,7 +306,11 @@ export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode,
         }}
       >
         © {new Date().getFullYear()} Peter McKay
-        {' · '}
+        <br />
+        <span style={{ fontSize: '0.8em', opacity: 0.7 }}>
+          This site uses Google Analytics to collect anonymous usage data.
+        </span>
+        <br />
         <a
           href="https://ko-fi.com/petermckay"
           target="_blank"
