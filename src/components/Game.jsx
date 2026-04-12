@@ -300,17 +300,14 @@ export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode,
           paddingBottom: '0.5rem',
           width: '100%',
           textAlign: 'center',
-          fontSize: 'var(--font-size-sm)',
+          fontSize: '0.65rem',
           color: 'var(--color-stripe)',
           fontFamily: 'var(--font-family-base)',
+          opacity: 0.6,
         }}
       >
         © {new Date().getFullYear()} Peter McKay
-        <br />
-        <span style={{ fontSize: '0.8em', opacity: 0.7 }}>
-          This site uses Google Analytics to collect anonymous usage data.
-        </span>
-        <br />
+        {' · '}
         <a
           href="https://ko-fi.com/petermckay"
           target="_blank"
@@ -319,6 +316,8 @@ export default function Game({ theme, toggleTheme, quoteAvailable, onToggleMode,
         >
           Ko-fi
         </a>
+        <br />
+        This site uses Google Analytics to collect anonymous usage data.
       </footer>
     </div>
   );
