@@ -20,12 +20,12 @@
   [headers.values]
     # Content Security Policy
     # - default-src self: only same-origin by default
-    # - script-src: self + Umami analytics
+    # - script-src: self + Umami analytics + Google Analytics (inline for gtag config)
     # - style-src: self + Google Fonts CSS + inline (Vite injects inline styles)
     # - font-src: self + Google Fonts files
-    # - img-src: self + data URIs (canvas toBlob exports)
-    # - connect-src: self + Umami (beacon pings)
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://cloud.umami.is; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://cloud.umami.is https://api-gateway.umami.dev; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+    # - img-src: self + data URIs (canvas toBlob exports) + Google Analytics
+    # - connect-src: self + Umami + Google Analytics (beacon pings)
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cloud.umami.is https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://cloud.umami.is https://api-gateway.umami.dev https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
 
     # Prevent clickjacking
     X-Frame-Options = "DENY"
